@@ -57,20 +57,34 @@ public class AddressBookController {
 		}
 	}
 
-	@PostMapping("/users/{userId}/contacts")
-	public ResponseEntity<Object> createContacts(@PathVariable int userId, @RequestBody AddressBook newContacts) {
+	@PostMapping("/users/{userId}/contact")
+	public ResponseEntity<Object> createContact(@PathVariable int userId, @RequestBody AddressBook newContact) {
 		Optional<User> userOptional = userRepository.findById(userId);
 		if (!userOptional.isPresent()) {
 			throw new UserNotFoundException();
 		}
 		User user = userOptional.get();
-		newContacts.setUser(user);
-		addressBookRepository.save(newContacts);
+		newContact.setUser(user);
+		addressBookRepository.save(newContact);
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(newContacts.getId()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newContact.getId())
+				.toUri();
 
 		return ResponseEntity.created(location).build();
+	}
+
+	@PostMapping("/users/{userId}/contacts")
+	public void createContacts(@PathVariable int userId, @RequestBody List<AddressBook> newContacts) {
+		Optional<User> userOptional = userRepository.findById(userId);
+		if (!userOptional.isPresent()) {
+			throw new UserNotFoundException();
+		}
+		User user = userOptional.get();
+		newContacts.forEach(contact -> {
+			contact.setUser(user);
+			addressBookRepository.save(contact);
+		});
+
 	}
 
 	@DeleteMapping("/users/{userId}/contacts/{contactsId}")

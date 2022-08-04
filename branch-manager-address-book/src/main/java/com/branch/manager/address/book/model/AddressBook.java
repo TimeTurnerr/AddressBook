@@ -3,8 +3,10 @@ package com.branch.manager.address.book.model;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -15,7 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class AddressBook {
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "myaddresssequence", initialValue = 5)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "myaddresssequence")
 	private int id;
 
 	@Size(min = 2)
