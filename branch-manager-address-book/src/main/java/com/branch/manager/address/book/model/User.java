@@ -1,4 +1,4 @@
-package com.branch.manager.address.book.branchmanageraddressbook.user;
+package com.branch.manager.address.book.model;
 
 import java.util.List;
 

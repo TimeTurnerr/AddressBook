@@ -1,4 +1,4 @@
-package com.branch.manager.address.book.branchmanageraddressbook.user;
+package com.branch.manager.address.book.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

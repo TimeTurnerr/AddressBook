@@ -1,4 +1,4 @@
-package com.branch.manager.address.book.branchmanageraddressbook;
+package com.branch.manager.address.book.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.branch.manager.address.book.branchmanageraddressbook.user.User;
-import com.branch.manager.address.book.branchmanageraddressbook.user.UserNotFoundException;
-import com.branch.manager.address.book.branchmanageraddressbook.user.UserRepository;
+import com.branch.manager.address.book.exception.UserNotFoundException;
+import com.branch.manager.address.book.model.User;
+import com.branch.manager.address.book.repository.UserRepository;
 
 @RestController
 public class UserController {

@@ -1,4 +1,4 @@
-package com.branch.manager.address.book.branchmanageraddressbook;
+package com.branch.manager.address.book.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.branch.manager.address.book.branchmanageraddressbook.user.AddressBook;
-import com.branch.manager.address.book.branchmanageraddressbook.user.AddressBookRepository;
-import com.branch.manager.address.book.branchmanageraddressbook.user.ContactNotFoundException;
-import com.branch.manager.address.book.branchmanageraddressbook.user.User;
-import com.branch.manager.address.book.branchmanageraddressbook.user.UserNotFoundException;
-import com.branch.manager.address.book.branchmanageraddressbook.user.UserRepository;
+import com.branch.manager.address.book.exception.ContactNotFoundException;
+import com.branch.manager.address.book.exception.UserNotFoundException;
+import com.branch.manager.address.book.model.AddressBook;
+import com.branch.manager.address.book.model.User;
+import com.branch.manager.address.book.repository.AddressBookRepository;
+import com.branch.manager.address.book.repository.UserRepository;
 
 @RestController
 public class AddressBookController {

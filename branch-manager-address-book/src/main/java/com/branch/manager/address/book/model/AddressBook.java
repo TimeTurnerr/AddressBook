@@ -1,4 +1,4 @@
-package com.branch.manager.address.book.branchmanageraddressbook.user;
+package com.branch.manager.address.book.model;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
