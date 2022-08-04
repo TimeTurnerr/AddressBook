@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.branch.manager.address.book.model.User;
+import com.branch.manager.address.book.repository.UserRepository;
 import com.branch.manager.address.book.service.UserService;
 
 @RestController
@@ -22,6 +23,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@GetMapping("/users")
 	public List<User> getAllUsers() {
@@ -39,8 +43,13 @@ public class UserController {
 		return userService.createUser(user);
 	}
 
+	@PostMapping("/users/{id}")
+	public ResponseEntity<Object> updateUser(@PathVariable int id, @Valid @RequestBody User user) {
+		return userService.updateUser(id, user);
+	}
+
 	@DeleteMapping("/users/{id}")
 	public void deleteUserById(@PathVariable int id) {
-		userService.deleteUser(id);
+		userRepository.deleteById(id);
 	}
 }

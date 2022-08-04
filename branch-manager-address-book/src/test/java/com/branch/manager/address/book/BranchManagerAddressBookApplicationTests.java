@@ -1,4 +1,4 @@
-package com.branch.manager.address.book.branchmanageraddressbook;
+package com.branch.manager.address.book;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -2,6 +2,8 @@ package com.branch.manager.address.book.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,15 +25,20 @@ public class User {
 	@Size(min = 2)
 	private String name;
 
-	@OneToMany(mappedBy = "user")
+	@Size(min = 5)
+	@Column(unique = true)
+	private String email;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<AddressBook> userContacts;
 
 	public User() {
 	}
 
-	public User(Integer id, String name) {
+	public User(Integer id, String name, String email) {
 		this.id = id;
 		this.name = name;
+		this.email = email;
 	}
 
 	public Integer getId() {
@@ -58,9 +65,17 @@ public class User {
 		this.userContacts = userContacts;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", userContacts=" + userContacts + "]";
+		return "User [id=" + id + ", name=" + name + ", userContacts=" + userContacts + ", email=" + email + "]";
 	}
 
 }

@@ -24,6 +24,9 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private AddressBookService addressBookService;
+
 	public List<User> getUsers() {
 		return userRepository.findAll();
 	}
@@ -56,10 +59,27 @@ public class UserService {
 		return ResponseEntity.created(location).build();
 	}
 
+	public ResponseEntity<Object> updateUser(int id, User newUser) {
+		Optional<User> user = userRepository.findById(id);
+		if (!user.isPresent()) {
+			throw new UserNotFoundException("User Not Found");
+		}
+		User oldUser = user.get();
+		oldUser.setEmail(newUser.getEmail());
+		oldUser.setName(newUser.getName());
+		User savedUser = userRepository.save(oldUser);
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
+				.toUri();
+
+		return ResponseEntity.created(location).build();
+	}
+
 	public boolean userExists(User user) {
 		for (User us : getUsers()) {
-			us.getName().equals(user.getName());
-			return true;
+			if (us.getEmail().equals(user.getEmail())) {
+				return true;
+			}
 		}
 		return false;
 	}

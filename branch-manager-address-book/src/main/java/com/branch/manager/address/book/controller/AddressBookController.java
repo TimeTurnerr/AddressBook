@@ -1,8 +1,6 @@
 package com.branch.manager.address.book.controller;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,98 +10,45 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.branch.manager.address.book.exception.ContactNotFoundException;
-import com.branch.manager.address.book.exception.UserNotFoundException;
 import com.branch.manager.address.book.model.AddressBook;
-import com.branch.manager.address.book.model.User;
-import com.branch.manager.address.book.repository.AddressBookRepository;
-import com.branch.manager.address.book.repository.UserRepository;
+import com.branch.manager.address.book.service.AddressBookService;
 
 @RestController
 public class AddressBookController {
 
 	@Autowired
-	private AddressBookRepository addressBookRepository;
-
-	@Autowired
-	private UserRepository userRepository;
+	private AddressBookService addressBookService;
 
 	@GetMapping("/users/{userId}/contacts")
-	public List<AddressBook> getContacts(@PathVariable int userId) {
-		Optional<User> user = userRepository.findById(userId);
-		if (!user.isPresent()) {
-			throw new UserNotFoundException();
-		}
-		return user.get().getUserContacts();
+	public List<AddressBook> getAllContacts(@PathVariable int userId) {
+		return addressBookService.getContacts(userId);
 	}
 
 	@GetMapping("/users/{userId}/contacts/{contactsId}")
-	public AddressBook getContact(@PathVariable int userId, @PathVariable int contactsId) {
-		Optional<User> userOptional = userRepository.findById(userId);
-		if (!userOptional.isPresent()) {
-			throw new UserNotFoundException();
-		}
-		Optional<AddressBook> contactsOptional = addressBookRepository.findById(contactsId);
-		if (!contactsOptional.isPresent()) {
-			throw new ContactNotFoundException("id - " + contactsId);
-		}
-		User user = userOptional.get();
-		if (!user.getUserContacts().contains(contactsOptional.get())) {
-			throw new ContactNotFoundException("id - " + contactsId);
-		} else {
-			return contactsOptional.get();
-		}
-	}
-
-	@PostMapping("/users/{userId}/contact")
-	public ResponseEntity<Object> createContact(@PathVariable int userId, @RequestBody AddressBook newContact) {
-		Optional<User> userOptional = userRepository.findById(userId);
-		if (!userOptional.isPresent()) {
-			throw new UserNotFoundException();
-		}
-		User user = userOptional.get();
-		newContact.setUser(user);
-		addressBookRepository.save(newContact);
-
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newContact.getId())
-				.toUri();
-
-		return ResponseEntity.created(location).build();
+	public AddressBook getOneContact(@PathVariable int userId, @PathVariable int contactsId) {
+		return addressBookService.getContact(userId, contactsId);
 	}
 
 	@PostMapping("/users/{userId}/contacts")
-	public void createContacts(@PathVariable int userId, @RequestBody List<AddressBook> newContacts) {
-		Optional<User> userOptional = userRepository.findById(userId);
-		if (!userOptional.isPresent()) {
-			throw new UserNotFoundException();
-		}
-		User user = userOptional.get();
-		newContacts.forEach(contact -> {
-			contact.setUser(user);
-			addressBookRepository.save(contact);
-		});
+	public ResponseEntity<Object> createContactForUser(@PathVariable int userId, @RequestBody AddressBook newContact) {
+		return addressBookService.createContact(userId, newContact);
+	}
 
+	@PostMapping("/users/{userId}/contacts/{contactsId}")
+	public ResponseEntity<Object> updateContactForUser(@PathVariable int userId, @PathVariable int contactsId,
+			@RequestBody AddressBook newContact) {
+		return addressBookService.updateContact(userId, contactsId, newContact);
 	}
 
 	@DeleteMapping("/users/{userId}/contacts/{contactsId}")
 	public void deleteContact(@PathVariable int userId, @PathVariable int contactsId) {
-		Optional<User> userOptional = userRepository.findById(userId);
-		if (!userOptional.isPresent()) {
-			throw new UserNotFoundException();
-		}
-		Optional<AddressBook> contactsOptional = addressBookRepository.findById(contactsId);
-		if (!contactsOptional.isPresent()) {
-			throw new ContactNotFoundException("id - " + contactsId);
-		}
-		User user = userOptional.get();
-		if (!user.getUserContacts().contains(contactsOptional.get())) {
-			throw new ContactNotFoundException("id - " + contactsId);
-		} else {
-			addressBookRepository.deleteById(contactsId);
-		}
-
+		addressBookService.deleteContact(userId, contactsId);
 	}
+
+//	@PostMapping("/users/{userId}/contacts")
+//	public void createContactsForUser(@PathVariable int userId, @RequestBody List<AddressBook> newContacts) {
+//		addressBookService.createContacts(userId, newContacts);
+//	}
 
 }
