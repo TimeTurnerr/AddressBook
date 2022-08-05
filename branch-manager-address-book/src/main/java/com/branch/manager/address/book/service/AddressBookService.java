@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.branch.manager.address.book.exception.ContactAlreadyExistsException;
 import com.branch.manager.address.book.exception.ContactNotFoundException;
 import com.branch.manager.address.book.exception.UserNotFoundException;
 import com.branch.manager.address.book.model.AddressBook;
@@ -21,6 +22,9 @@ public class AddressBookService {
 
 	@Autowired
 	private AddressBookRepository addressBookRepository;
+
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -44,7 +48,7 @@ public class AddressBookService {
 		}
 		User user = userOptional.get();
 		if (!user.getUserContacts().contains(contactsOptional.get())) {
-			throw new ContactNotFoundException("Contact not found");
+			throw new ContactNotFoundException("Contact not found for given user");
 		} else {
 			return contactsOptional.get();
 		}
@@ -53,11 +57,11 @@ public class AddressBookService {
 	public ResponseEntity<Object> createContact(int userId, AddressBook newContact) {
 		Optional<User> userOptional = userRepository.findById(userId);
 		if (!userOptional.isPresent()) {
-			throw new UserNotFoundException();
+			throw new UserNotFoundException("User not found");
 		}
 		User user = userOptional.get();
 		if (contactExists(userId, newContact)) {
-			throw new UserNotFoundException("Contact Already Exists");
+			throw new ContactAlreadyExistsException("Contact Already Exists");
 		}
 		newContact.setUser(user);
 		addressBookRepository.save(newContact);
@@ -81,8 +85,7 @@ public class AddressBookService {
 	}
 
 	public void deleteContact(int userId, int contactsId) {
-		AddressBook contactForCurrentUser = getContact(userId, contactsId);
-		addressBookRepository.deleteById(contactForCurrentUser.getId());
+		addressBookRepository.deleteById(contactsId);
 	}
 
 	public boolean contactExists(int userId, AddressBook contact) {
@@ -93,17 +96,5 @@ public class AddressBookService {
 		}
 		return false;
 	}
-
-//	public void createContacts(int userId, List<AddressBook> newContacts) {
-//		Optional<User> userOptional = userRepository.findById(userId);
-//		if (!userOptional.isPresent()) {
-//			throw new UserNotFoundException("Contact not found");
-//		}
-//		User user = userOptional.get();
-//		newContacts.forEach(contact -> {
-//			contact.setUser(user);
-//			addressBookRepository.save(contact);
-//		});
-//	}
 
 }

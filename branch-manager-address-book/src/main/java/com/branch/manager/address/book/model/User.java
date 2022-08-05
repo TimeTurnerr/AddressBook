@@ -29,7 +29,7 @@ public class User {
 	@Column(unique = true)
 	private String email;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<AddressBook> userContacts;
 
 	public User() {

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.branch.manager.address.book.exception.UserAlreadyExistsException;
 import com.branch.manager.address.book.exception.UserNotFoundException;
 import com.branch.manager.address.book.model.User;
 import com.branch.manager.address.book.repository.UserRepository;
@@ -23,9 +24,6 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
-	private AddressBookService addressBookService;
 
 	public List<User> getUsers() {
 		return userRepository.findAll();
@@ -49,7 +47,7 @@ public class UserService {
 
 	public ResponseEntity<Object> createUser(User user) {
 		if (userExists(user)) {
-			throw new UserNotFoundException("User Already Exists");
+			throw new UserAlreadyExistsException("User Already Exists");
 		}
 		User savedUser = userRepository.save(user);
 
@@ -73,6 +71,10 @@ public class UserService {
 				.toUri();
 
 		return ResponseEntity.created(location).build();
+	}
+
+	public void deleteUserById(int id) {
+		userRepository.deleteById(id);
 	}
 
 	public boolean userExists(User user) {

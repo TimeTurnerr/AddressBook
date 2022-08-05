@@ -46,9 +46,4 @@ public class AddressBookController {
 		addressBookService.deleteContact(userId, contactsId);
 	}
 
-//	@PostMapping("/users/{userId}/contacts")
-//	public void createContactsForUser(@PathVariable int userId, @RequestBody List<AddressBook> newContacts) {
-//		addressBookService.createContacts(userId, newContacts);
-//	}
-
 }
