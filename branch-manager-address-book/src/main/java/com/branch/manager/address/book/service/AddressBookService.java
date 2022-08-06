@@ -24,10 +24,11 @@ public class AddressBookService {
 	private AddressBookRepository addressBookRepository;
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private UserRepository userRepository;
+
+	public List<AddressBook> getAllContacts() {
+		return addressBookRepository.findAll();
+	}
 
 	public List<AddressBook> getContacts(int userId) {
 		Optional<User> user = userRepository.findById(userId);

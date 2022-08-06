@@ -20,6 +20,11 @@ public class AddressBookController {
 	@Autowired
 	private AddressBookService addressBookService;
 
+	@GetMapping("/contacts")
+	public List<AddressBook> getAllContacts() {
+		return addressBookService.getAllContacts();
+	}
+
 	@GetMapping("/users/{userId}/contacts")
 	public List<AddressBook> getAllContacts(@PathVariable int userId) {
 		return addressBookService.getContacts(userId);
