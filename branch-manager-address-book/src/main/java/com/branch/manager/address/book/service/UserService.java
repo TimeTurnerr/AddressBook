@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.branch.manager.address.book.controller.UserController;
 import com.branch.manager.address.book.exception.UserAlreadyExistsException;
 import com.branch.manager.address.book.exception.UserNotFoundException;
 import com.branch.manager.address.book.model.User;
@@ -35,7 +36,7 @@ public class UserService {
 			throw new UserNotFoundException("User Not Found");
 		}
 		EntityModel<User> model = EntityModel.of(user.get());
-		WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).getUsers());
+		WebMvcLinkBuilder linkToUsers = linkTo(methodOn(UserController.class).getAllUsers());
 		model.add(linkToUsers.withRel("all-users"));
 		return model;
 
